@@ -13,10 +13,7 @@ pub fn handler(ctx: Context<DeleteComment>, blog_post_title: String) -> Result<(
         BlogError::UnauthorizedOwner
     );
 
-    blog_post.number_of_comments = blog_post
-        .number_of_comments
-        .checked_sub(1)
-        .ok_or(BlogError::Underflow)?;
+    blog_post.number_of_comments = blog_post.number_of_comments.checked_sub(1).unwrap();
 
     Ok(())
 }
@@ -39,5 +36,12 @@ pub struct DeleteComment<'info> {
         bump
     )]
     pub blog_post: Account<'info, BlogPost>,
+    #[account(
+        mut,
+        seeds = [blog.title.as_bytes(), blog.owner.key().as_ref()],
+        bump,
+        constraint = blog.owner == blog_post.owner @ BlogError::UnauthorizedOwner,
+    )]
+    pub blog: Account<'info, Blog>,
     pub system_program: Program<'info, System>,
 }

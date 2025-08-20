@@ -6,6 +6,7 @@ use anchor_lang::{prelude::*, solana_program::clock::UnixTimestamp};
 pub fn handler(ctx: Context<AddComment>, blog_post_title: String, content: String) -> Result<()> {
     let comment = &mut ctx.accounts.comment;
     comment.blog_post = ctx.accounts.blog_post.key();
+    comment.blog = ctx.accounts.blog.key();
 
     let blog_post = &mut ctx.accounts.blog_post;
 
@@ -14,10 +15,7 @@ pub fn handler(ctx: Context<AddComment>, blog_post_title: String, content: Strin
     comment.created_at = Clock::get().unwrap().unix_timestamp;
     comment.bump = ctx.bumps.comment;
 
-    blog_post.number_of_comments = blog_post
-        .number_of_comments
-        .checked_add(1)
-        .ok_or(BlogError::Overflow)?;
+    blog_post.number_of_comments = blog_post.number_of_comments.checked_add(1).unwrap();
 
     Ok(())
 }
@@ -41,5 +39,12 @@ pub struct AddComment<'info> {
         bump
     )]
     pub blog_post: Account<'info, BlogPost>,
+    #[account(
+        mut,
+        seeds = [blog.title.as_bytes(), blog.owner.key().as_ref()],
+        bump,
+        constraint = blog.owner == blog_post.owner @ BlogError::UnauthorizedOwner,
+    )]
+    pub blog: Account<'info, Blog>,
     pub system_program: Program<'info, System>,
 }

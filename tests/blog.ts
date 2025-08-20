@@ -592,6 +592,7 @@ describe("blog", () => {
           commentAuthor: commentAuthor1.publicKey,
           comment: commentAddress,
           blogPost: blogPostAddress,
+          blog: blogAddress,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([commentAuthor1])
@@ -647,6 +648,7 @@ describe("blog", () => {
           commentAuthor: commentAuthor1.publicKey,
           comment: commentAddress,
           blogPost: blogPostAddress,
+          blog: blogAddress,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([commentAuthor1])
@@ -692,6 +694,7 @@ describe("blog", () => {
             commentAuthor: commentAuthor1.publicKey,
             comment: commentAddress,
             blogPost: blogPostAddress,
+            blog: blogAddress,
             systemProgram: anchor.web3.SystemProgram.programId,
           })
           .signers([commentAuthor1])
@@ -730,6 +733,7 @@ describe("blog", () => {
             commentAuthor: commentAuthor1.publicKey,
             comment: commentAddress,
             blogPost: blogPostAddress,
+            blog: blogAddress,
             systemProgram: anchor.web3.SystemProgram.programId,
           })
           .signers([commentAuthor1])
@@ -767,6 +771,7 @@ describe("blog", () => {
             commentAuthor: commentAuthor1.publicKey,
             comment: commentAddress,
             blogPost: blogPostAddress,
+            blog: blogAddress,
             systemProgram: anchor.web3.SystemProgram.programId,
           })
           .signers([commentAuthor2])
@@ -779,8 +784,13 @@ describe("blog", () => {
     });
   });
 
-  describe("remove comment", async () => {
-    it("Should successfully remove a comment from blog post when the signer is the comment author", async () => {
+  describe("delete comment", async () => {
+    it("Should successfully delete a comment from blog post when the signer is the comment author", async () => {
+      const [blogAddress] = getBlogAddress(
+        blogTitle1,
+        blogOwner1.publicKey,
+        program.programId
+      );
       const [blogPostAddress] = getBlogPostAddress(
         blogPost1,
         blogOwner1.publicKey,
@@ -799,6 +809,7 @@ describe("blog", () => {
           signer: commentAuthor1.publicKey,
           comment: commentAddress,
           blogPost: blogPostAddress,
+          blog: blogAddress,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([commentAuthor1])
@@ -811,7 +822,12 @@ describe("blog", () => {
       expect(blogPostAccount.numberOfComments.eq(new anchor.BN(0))).to.be.true;
     });
 
-    it("Should successfully remove a comment from blog post when the signer is the blog owner", async () => {
+    it("Should successfully delete a comment from blog post when the signer is the blog owner", async () => {
+      const [blogAddress] = getBlogAddress(
+        blogTitle1,
+        blogOwner1.publicKey,
+        program.programId
+      );
       const [blogPostAddress] = getBlogPostAddress(
         blogPost2,
         blogOwner1.publicKey,
@@ -830,6 +846,7 @@ describe("blog", () => {
           signer: commentAuthor1.publicKey,
           comment: commentAddress,
           blogPost: blogPostAddress,
+          blog: blogAddress,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([commentAuthor1])
@@ -842,7 +859,7 @@ describe("blog", () => {
       expect(blogPostAccount.numberOfComments.eq(new anchor.BN(0))).to.be.true;
     });
 
-    it("Should fail to remove a comment from blog post when the signer unauthorized", async () => {
+    it("Should fail to delete a comment from blog post when the signer unauthorized", async () => {
       const [blogPostAddress] = getBlogPostAddress(
         blogPost1,
         blogOwner1.publicKey,
@@ -869,6 +886,7 @@ describe("blog", () => {
             commentAuthor: commentAuthor1.publicKey,
             comment: commentAddress,
             blogPost: blogPostAddress,
+            blog: blogAddress,
             systemProgram: anchor.web3.SystemProgram.programId,
           })
           .signers([commentAuthor1])
@@ -880,6 +898,7 @@ describe("blog", () => {
             signer: commentAuthor1.publicKey,
             comment: commentAddress,
             blogPost: blogPostAddress,
+            blog: blogAddress,
             systemProgram: anchor.web3.SystemProgram.programId,
           })
           .signers([commentAuthor2])

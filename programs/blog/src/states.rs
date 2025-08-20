@@ -33,6 +33,7 @@ pub struct BlogPost {
 pub struct Comment {
     pub comment_author: Pubkey,
     pub blog_post: Pubkey,
+    pub blog: Pubkey,
     #[max_len(300)]
     pub content: String,
     pub created_at: i64,
